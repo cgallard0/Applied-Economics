@@ -1,0 +1,42 @@
+{\rtf1\fs24
+\trowd\trgaph75\trleft-75\intbl\trqc\clbrdrt\brdrs\cellx7632\clbrdrt\brdrs\cellx10944
+\ql \cell\qc (1)\cell\row
+\trowd\trgaph75\trleft-75\trqc\cellx7632\cellx10944
+\trowd\trgaph75\trleft-75\trqc\clbrdrb\brdrs\cellx7632\clbrdrb\brdrs\cellx10944
+\ql VARIABLES\cell\qc Satisfaction with Life\cell\row
+\trowd\trgaph75\trleft-75\trqc\cellx7632\cellx10944
+\ql \cell\qc \cell\row
+\ql Age in Years\cell\qc -0.0219***\cell\row
+\ql \cell\qc (0.00663)\cell\row
+\ql Age Squared\cell\qc 0.000234***\cell\row
+\ql \cell\qc (7.02e-05)\cell\row
+\ql Female\cell\qc -0.0244\cell\row
+\ql \cell\qc (0.0494)\cell\row
+\ql Self-reported Height\cell\qc 0.00376\cell\row
+\ql \cell\qc (0.00264)\cell\row
+\ql Natural Log of Income\cell\qc 0.107***\cell\row
+\ql \cell\qc (0.0248)\cell\row
+\ql Working\cell\qc -0.289**\cell\row
+\ql \cell\qc (0.131)\cell\row
+\ql Not Working\cell\qc -0.355***\cell\row
+\ql \cell\qc (0.134)\cell\row
+\ql Economic Rank Ladder\cell\qc 0.163***\cell\row
+\ql \cell\qc (0.0290)\cell\row
+\ql Satisfaction with Economic Condition\cell\qc 0.566***\cell\row
+\ql \cell\qc (0.0572)\cell\row
+\ql Economic Rank x Satisfaction with Economic Condition\cell\qc -0.0282**\cell\row
+\ql \cell\qc (0.0133)\cell\row
+\ql Health Self-Evaluation\cell\qc 0.184***\cell\row
+\ql \cell\qc (0.0307)\cell\row
+\ql Medical Insurance\cell\qc 0.149**\cell\row
+\ql \cell\qc (0.0626)\cell\row
+\ql Constant\cell\qc -0.483\cell\row
+\ql \cell\qc (0.545)\cell\row
+\ql \cell\qc \cell\row
+\ql Observations\cell\qc 2,243\cell\row
+\trowd\trgaph75\trleft-75\trqc\trbrdrb\brdrs\clbrdrb\brdrs\cellx7632\clbrdrb\brdrs\cellx10944
+\ql R-squared\cell\qc 0.333\cell\row
+\pard\qc
+Standard errors in parentheses\par
+*** p<0.01, ** p<0.05, * p<0.1\par
+}

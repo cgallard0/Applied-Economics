@@ -1,0 +1,20 @@
+{
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\begin{tabular}{l*{5}{c}}
+\toprule
+                    &\multicolumn{1}{c}{(1)}&\multicolumn{1}{c}{(2)}&\multicolumn{1}{c}{(3)}&\multicolumn{1}{c}{(4)}&\multicolumn{1}{c}{(5)}\\
+                    &\multicolumn{1}{c}{Marginalization}&\multicolumn{1}{c}{Marginalization}&\multicolumn{1}{c}{Marginalization}&\multicolumn{1}{c}{Marginalization}&\multicolumn{1}{c}{Marginalization}\\
+\midrule
+Cartel presence     &     -2.0025\sym{***}&     -2.3879\sym{***}&     -2.7991\sym{***}&     -2.4198\sym{***}&     -2.3820\sym{***}\\
+                    &    (0.3379)         &    (0.7794)         &    (1.0587)         &    (0.7696)         &    (0.7877)         \\
+\midrule
+Wild bootstrap p-valor&       0.000         &       0.014         &       0.017         &       0.008         &       0.013         \\
+F primera etapa     &       39.38         &        7.74         &        5.55         &        8.27         &        7.64         \\
+p-valor F           &       0.000         &       0.009         &       0.025         &       0.008         &       0.010         \\
+Efectos fijos por estado&         Yes         &         Yes         &         Yes         &         Yes         &         Yes         \\
+Controles           &          No         &         Yes         &         Yes         &         Yes         &         Yes         \\
+Clusters            &          31         &          30         &          30         &          29         &          30         \\
+Observaciones       &       2,439         &       2,161         &       2,107         &       2,143         &       2,159         \\
+\bottomrule
+\end{tabular}
+}

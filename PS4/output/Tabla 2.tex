@@ -1,0 +1,18 @@
+{
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\begin{tabular}{l*{4}{c}}
+\toprule
+                    &\multicolumn{1}{c}{(1)}&\multicolumn{1}{c}{(2)}&\multicolumn{1}{c}{(3)}&\multicolumn{1}{c}{(4)}\\
+                    &\multicolumn{1}{c}{Cartel presence 2010}&\multicolumn{1}{c}{Cartel presence 2010}&\multicolumn{1}{c}{Cartel presence 2005}&\multicolumn{1}{c}{Cartel presence 2005}\\
+\midrule
+Chinese presence    &      0.2158\sym{***}&      0.1011\sym{***}&      0.1299\sym{***}&      0.0589\sym{***}\\
+                    &    (0.0344)         &    (0.0363)         &    (0.0242)         &    (0.0199)         \\
+\midrule
+Wild bootstrap p-valor&       0.000         &       0.014         &       0.000         &       0.015         \\
+Efectos fijos por estado&         Yes         &         Yes         &         Yes         &         Yes         \\
+Controles           &          No         &         Yes         &          No         &         Yes         \\
+Clusters            &          31         &          30         &          31         &          30         \\
+Observaciones       &       2,439         &       2,161         &       2,440         &       2,162         \\
+\bottomrule
+\end{tabular}
+}

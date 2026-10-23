@@ -1,0 +1,17 @@
+{
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\begin{tabular}{l*{8}{c}}
+\toprule
+            &\multicolumn{1}{c}{(1)}         &\multicolumn{1}{c}{(2)}         &\multicolumn{1}{c}{(3)}         &\multicolumn{1}{c}{(4)}         &\multicolumn{1}{c}{(5)}         &\multicolumn{1}{c}{(6)}         &\multicolumn{1}{c}{(7)}         &\multicolumn{1}{c}{(8)}         \\
+            &\multicolumn{1}{c}{Math p=1}&\multicolumn{1}{c}{Math p=2}&\multicolumn{1}{c}{Math p=3}&\multicolumn{1}{c}{Math p=4}&\multicolumn{1}{c}{Verbal p=1}&\multicolumn{1}{c}{Verbal p=2}&\multicolumn{1}{c}{Verbal p=3}&\multicolumn{1}{c}{Verbal p=4}\\
+\midrule
+Class size (RD fuzzy)&      -0.091         &      -0.070         &      -0.100         &      -0.235         &      -0.280\sym{**} &      -0.313\sym{*}  &      -0.336\sym{*}  &      -0.426         \\
+            &     (0.149)         &     (0.173)         &     (0.243)         &     (0.296)         &     (0.118)         &     (0.164)         &     (0.201)         &     (0.270)         \\
+\midrule
+p-valor robusto&       0.761         &       0.855         &       0.687         &       0.388         &       0.036         &       0.093         &       0.118         &       0.118         \\
+Bandwidth   &        7.76         &       12.48         &       12.94         &       15.32         &        9.81         &       12.05         &       16.13         &       17.31         \\
+N izquierda &          40         &          71         &          84         &          98         &          53         &          71         &         106         &         119         \\
+N derecha   &         168         &         252         &         278         &         317         &         202         &         252         &         339         &         357         \\
+\bottomrule
+\end{tabular}
+}

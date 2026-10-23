@@ -1,0 +1,17 @@
+		(1)	(2)	(3)	(4)	(5)	(6)	(7)	(8)
+VARIABLES	LABELS	Log Expenditure	Log Expenditure	Log Expenditure	Log Expenditure	Log Expenditure	Log Expenditure	Log Expenditure	Log Expenditure
+									
+dfmfd	Female participation	0.154***	-0.039*	-0.032	0.154***	0.013	-0.082***	-0.082***	0.038
+		(0.038)	(0.023)	(0.024)	(0.038)	(0.038)	(0.024)	(0.024)	(0.039)
+Constant	Constant	8.286***	8.370***	8.367***	8.286***	8.347***	8.389***	8.389***	8.336***
+		(0.019)	(0.015)	(0.015)	(0.019)	(0.019)	(0.015)	(0.015)	(0.019)
+									
+Observations		1,652	1,652	1,652	1,652	1,652	1,652	1,652	1,652
+R-squared		0.652	0.050	0.167	0.652	0.693	0.220	0.294	0.768
+Village fixed effects		No	No	Yes	Yes	No	Yes	No	No
+Household fixed effects		Yes	No	No	Yes	Yes	No	No	Yes
+Year fixed effects		No	Yes	No	No	Yes	Yes	No	No
+Village x year fixed effects		No	No	No	No	No	No	Yes	Yes
+Standard errors in parentheses									
+*** p<0.01, ** p<0.05, * p<0.1									
+Column (1): household FE. Column (2): year FE. Column (3): village FE. Column (4): village and household FE. Column (5): year and household FE. Column (6): year and village FE. Column (7): village x year FE. Column (8): village x year and household FE. Household x year FE cannot be estimated (one observation per cell).									

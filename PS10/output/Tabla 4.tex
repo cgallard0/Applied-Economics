@@ -1,0 +1,23 @@
+{
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\begin{tabular}{l*{4}{c}}
+\toprule
+                    &\multicolumn{1}{c}{(1)}&\multicolumn{1}{c}{(2)}&\multicolumn{1}{c}{(3)}&\multicolumn{1}{c}{(4)}\\
+                    &\multicolumn{1}{c}{Math}&\multicolumn{1}{c}{Math}&\multicolumn{1}{c}{Verbal}&\multicolumn{1}{c}{Verbal}\\
+\midrule
+Class size          &     -0.0220         &     -0.0549         &     -0.1103\sym{***}&     -0.0699         \\
+                    &    (0.0533)         &    (0.0754)         &    (0.0402)         &    (0.0584)         \\
+\addlinespace
+Percent disadvantaged&     -0.3140\sym{***}&     -0.3135\sym{***}&     -0.3447\sym{***}&     -0.3453\sym{***}\\
+                    &    (0.0206)         &    (0.0206)         &    (0.0166)         &    (0.0166)         \\
+\addlinespace
+Enrollment          &                     &      0.0150         &                     &     -0.0183         \\
+                    &                     &    (0.0253)         &                     &    (0.0193)         \\
+\addlinespace
+Constant            &     72.0672\sym{***}&     72.2274\sym{***}&     82.6496\sym{***}&     82.4532\sym{***}\\
+                    &    (1.5688)         &    (1.5875)         &    (1.1923)         &    (1.2206)         \\
+\midrule
+Observaciones       &         922         &         922         &         922         &         922         \\
+\bottomrule
+\end{tabular}
+}

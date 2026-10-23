@@ -1,0 +1,36 @@
+		(1)
+VARIABLES	LABELS	Satisfaction with Life
+		
+age	Age in Years	-0.0362***
+		(0.00743)
+age2	Age Squared	0.000420***
+		(7.69e-05)
+sex	Female	-0.0196
+		(0.0562)
+height	Height	0.00462
+		(0.00300)
+ln_income	Natural Log of Income	0.180***
+		(0.0271)
+work0	Working	-0.261*
+		(0.147)
+work2	Not Working	-0.423***
+		(0.151)
+marsta1	Married	-0.188**
+		(0.0732)
+marsta2	Living Together	-0.181*
+		(0.102)
+marsta3	Divorced	-0.220**
+		(0.0990)
+marsta4	Widowed	-0.195**
+		(0.0974)
+econrk	Economic Rank Ladder	0.231***
+		(0.0148)
+hprblm	Health Problems in last 30 days	-0.140***
+		(0.0438)
+Constant	Constant	0.574
+		(0.593)
+		
+Observations		2,369
+R-squared		0.176
+Standard errors in parentheses		
+*** p<0.01, ** p<0.05, * p<0.1		

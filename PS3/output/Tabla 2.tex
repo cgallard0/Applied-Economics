@@ -1,0 +1,23 @@
+{
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\begin{tabular}{l*{2}{c}}
+\toprule
+                    &\multicolumn{1}{c}{(1)}&\multicolumn{1}{c}{(2)}\\
+                    &\multicolumn{1}{c}{Wage}&\multicolumn{1}{c}{Wage}\\
+\midrule
+Intelligence        &       3.001\sym{***}&       3.044\sym{***}\\
+                    &   (0.00361)         &    (0.0514)         \\
+\addlinespace
+A                   &       0.987\sym{***}&       0.855\sym{*}  \\
+                    &    (0.0246)         &     (0.351)         \\
+\addlinespace
+B                   &       2.012\sym{***}&       2.849\sym{**} \\
+                    &    (0.0595)         &     (0.848)         \\
+\addlinespace
+Constant            &     -0.0615         &      -7.096         \\
+                    &     (0.506)         &     (7.203)         \\
+\midrule
+Observations        &         100         &         100         \\
+\bottomrule
+\end{tabular}
+}

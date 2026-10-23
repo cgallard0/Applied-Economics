@@ -1,0 +1,112 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,provide=*]{babel}
+\addto\captionsspanish{\renewcommand{\tablename}{Tabla}}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{adjustbox}
+\usepackage{pdflscape}
+\usepackage{float}
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage[round]{natbib}
+\usepackage[hidelinks]{hyperref}
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+\setlist{itemsep=0.2em}
+
+% Texto en rojo = algo que hay que revisar/actualizar después de volver a correr el do-file.
+% Para sacar el color: \renewcommand{\revisar}[1]{#1}
+\newcommand{\revisar}[1]{\textcolor{red}{#1}}
+% Inserta una tabla exportada desde Stata (se achica si no entra)
+\newcommand{\tabla}[1]{\begin{adjustbox}{max width=\linewidth, max totalheight=0.72\textheight}\input{#1}\end{adjustbox}}
+% Figura que todavía no existe (se genera al correr el do-file): muestra un recuadro
+\newcommand{\figura}[2][0.75\linewidth]{\IfFileExists{#2}{\includegraphics[width=#1]{#2}}{\fbox{\parbox{\dimexpr#1-2\fboxsep-2\fboxrule\relax}{\centering\vspace{2em}\textcolor{red}{Figura pendiente: se genera al correr el do-file}\\[0.5em]\texttt{\detokenize{#2}}\vspace{2em}}}}}
+% Notas al pie de tablas
+\newcommand{\notas}[1]{\par\vspace{0.3em}\begin{minipage}{0.92\linewidth}\footnotesize\textit{Notas:} #1\end{minipage}}
+% Consignas en cursiva
+\newcommand{\consigna}[1]{\par\textit{#1}\par}
+
+\lstset{
+  language={},
+  basicstyle=\ttfamily\scriptsize,
+  breaklines=true,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  frame=single,
+  rulecolor=\color{gray!50},
+  commentstyle=\color{gray},
+  morecomment=[l]{*\ },
+  morecomment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  tabsize=4,
+  inputencoding=utf8,
+  extendedchars=true,
+  literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+           {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+           {ñ}{{\~n}}1 {Ñ}{{\~N}}1 {ü}{{\"u}}1 {Ü}{{\"U}}1
+           {¿}{{?`}}1 {¡}{{!`}}1 {’}{{'}}1 {‘}{{`}}1 {“}{{``}}1 {”}{{''}}1
+           {ã}{{\~a}}1 {õ}{{\~o}}1 {â}{{\^a}}1 {ê}{{\^e}}1 {ô}{{\^o}}1 {à}{{\`a}}1
+           {Ã}{{\~A}}1 {Õ}{{\~O}}1 {Â}{{\^A}}1 {Ê}{{\^E}}1 {Ô}{{\^O}}1 {Ç}{{\c C}}1 {×}{{$\times$}}1
+           {°}{{$^\circ$}}1 {–}{{--}}1 {—}{{---}}1 {·}{{$\cdot$}}1 {ç}{{\c c}}1
+}
+\begin{document}
+
+\begin{center}
+{\Large\bfseries Problem Set 5: Efectos fijos}\\[0.5em]
+E178: Economía Aplicada --- Universidad de San Andrés\\
+Fecha de entrega: 27 de septiembre de 2024\\[0.5em]
+\textbf{Integrantes:} Juan Batalla, Nina Di Costanzo Pereira, Catalina Gallardo e Ignacio Yenarópulos
+\end{center}
+
+Usamos la base \texttt{microcredit.dta} para evaluar el impacto de la participación femenina en un programa de microcréditos en la India (\texttt{dfmfd}) sobre el logaritmo del gasto total de los hogares (\texttt{exptot}). La base es un panel de 826 hogares, ubicados en 87 villages, observados en 1991 y en 1998. La participación aumentó del 35\% de los hogares en 1991 al 53\% en 1998: 181 hogares empezaron a participar entre ambos años, 33 dejaron de hacerlo, 254 participaron en los dos años y 358 en ninguno.
+
+\section*{1. Especificación base}
+
+\begin{table}[H]\centering
+\caption{Especificación base (MCO)}\label{tab:base}
+\tabla{"../output/Tabla 1.tex"}
+\notas{Variable dependiente: logaritmo del gasto total del hogar. Errores estándar entre paréntesis. * $p<0.10$, ** $p<0.05$, *** $p<0.01$.}
+\end{table}
+
+La Tabla~\ref{tab:base} muestra que, sin controles, el coeficiente de la participación femenina es prácticamente cero (0.000, con un error estándar de 0.023) y no es significativo: los hogares con una participante no gastan, en promedio, distinto de los que no participan. Para que este estimador sea consistente se necesita que la participación sea exógena, es decir, que no esté correlacionada con el término de error: $E(\epsilon_{h,t}\mid \text{Credit}_{h,t})=0$. En otras palabras, la participación tendría que ser como si estuviera asignada al azar. Es un supuesto muy poco creíble: los hogares deciden si participar (autoselección), estos programas suelen focalizarse en los hogares más pobres, las villages donde se ofrece el programa no se eligen al azar y, además, entre 1991 y 1998 cambió tanto la participación como el gasto de todos los hogares. Cualquiera de estos factores, si no se controla, sesga el coeficiente.
+
+\section*{2. Efectos fijos}
+
+\begin{table}[H]\centering
+\caption{Participación femenina y gasto del hogar con distintos efectos fijos}\label{tab:fe}
+\small
+\tabla{"../output/Tabla 2.tex"}
+\notas{Variable dependiente: logaritmo del gasto total del hogar. Errores estándar entre paréntesis. Columnas: (1) household FE; (2) year FE; (3) village FE; (4) village y household FE; (5) year y household FE; (6) year y village FE; (7) village $\times$ year FE; (8) village $\times$ year y household FE. La especificación con household $\times$ year FE no se puede estimar. El $R^2$ incluye la variación explicada por los efectos fijos. * $p<0.10$, ** $p<0.05$, *** $p<0.01$.}
+\end{table}
+
+En todas las especificaciones el coeficiente se interpreta como la diferencia porcentual aproximada en el gasto del hogar asociada a tener una participante en el programa, comparando solo dentro de los grupos que definen los efectos fijos. Cada conjunto de efectos fijos controla por un tipo distinto de factor no observable:
+
+\begin{enumerate}[label=\alph*.]
+  \item \textbf{Household FE} (columna 1). Controla por todas las características del hogar que no cambian en el tiempo (riqueza inicial, habilidad, preferencias, ubicación). El efecto se identifica con los hogares que cambiaron su participación entre 1991 y 1998. El coeficiente es 0.154 y es significativo al 1\%: participar se asocia con un gasto alrededor de 15\% mayor. El supuesto necesario es que no haya factores que cambien en el tiempo y estén correlacionados con la participación. Pero esta especificación no controla por los shocks comunes a todos los hogares: entre 1991 y 1998 aumentaron tanto la participación como el gasto, así que parte del coeficiente refleja esa tendencia común y no el efecto del programa.
+  \item \textbf{Year FE} (columna 2). Controla por los shocks agregados de cada año (crecimiento, inflación) y compara hogares en un mismo año. El coeficiente es $-0.039$, significativo solo al 10\%. No controla por la autoselección de los hogares ni por las diferencias entre villages.
+  \item \textbf{Village FE} (columna 3). Controla por las características fijas de cada village (infraestructura, acceso a mercados, ubicación del programa) y compara hogares de una misma village. El coeficiente es $-0.032$ y no es significativo. No controla por la autoselección dentro de cada village ni por los shocks temporales.
+  \item \textbf{Village y household FE} (columna 4). La regresión se puede correr, pero los efectos fijos de village son redundantes: cada hogar pertenece a una sola village, así que cada dummy de village es la suma de las dummies de sus hogares (colinealidad perfecta). Stata descarta las dummies redundantes y el resultado es idéntico al de la columna 1.
+  \item \textbf{Year y household FE} (columna 5). Es el modelo de efectos fijos en dos sentidos, que compara la evolución del gasto de los hogares que empezaron (o dejaron) de participar con la de los que no cambiaron. Controla tanto por las características fijas del hogar como por los shocks comunes de cada año. El coeficiente cae a 0.013 y deja de ser significativo, lo que sugiere que el efecto de la columna 1 se debía a la tendencia común. El supuesto de identificación es el de tendencias paralelas: sin el programa, el gasto de los hogares que cambiaron su participación habría evolucionado igual que el de los demás. No controla por shocks específicos de cada hogar o de cada village que coincidan con la decisión de participar.
+  \item \textbf{Year y village FE} (columna 6). Compara hogares de una misma village en un mismo año. El coeficiente es $-0.082$ y significativo al 1\%: los hogares que participan gastan alrededor de 8\% menos que sus vecinos que no participan. Esto refleja selección negativa (participan los hogares más pobres) y no un efecto causal, porque esta especificación no controla por las características del hogar.
+  \item \textbf{Village $\times$ year FE} (columna 7). Además de lo anterior, controla por los shocks específicos de cada village en cada año (por ejemplo, una mala cosecha local o la llegada de otros programas). El coeficiente es prácticamente igual al de la columna 6 ($-0.082$, significativo al 1\%), lo que indica que los shocks locales no explican la diferencia: lo que pesa es la selección entre hogares.
+  \item \textbf{Household $\times$ year FE}. No se puede estimar. Hay una sola observación por hogar y año, de modo que habría tantos efectos fijos como observaciones: cada efecto fijo explica perfectamente su observación y no queda variación para identificar el coeficiente (los grados de libertad son cero).
+  \item \textbf{Village $\times$ year y household FE} (columna 8). Es la especificación más exigente: controla por las características fijas de cada hogar y por los shocks de cada village en cada año. El efecto se identifica comparando la evolución del gasto de los hogares que cambiaron su participación con la de los hogares de la \emph{misma village} que no la cambiaron. El coeficiente es 0.038 y no es significativo. El supuesto es que, dentro de cada village, el gasto de ambos grupos habría evolucionado de forma paralela sin el programa. Sigue sin controlar por shocks propios de cada hogar que cambien en el tiempo (por ejemplo, una enfermedad o la pérdida de un empleo) y que afecten la decisión de participar.
+\end{enumerate}
+
+En síntesis, el signo y la significatividad del coeficiente dependen de qué factores no observables se controlan. Las especificaciones que no incluyen efectos fijos por hogar dan coeficientes negativos, consistentes con que participan los hogares más pobres. Con efectos fijos por hogar pero sin controlar por el tiempo, el coeficiente es positivo, porque recoge el crecimiento común del gasto. Cuando se controla por ambas cosas (columnas 5 y 8), que son las especificaciones más creíbles, el efecto es pequeño y no significativo, así que no encontramos evidencia de que la participación femenina en el programa haya aumentado el gasto de los hogares. Por último, los errores estándar de la tabla no están clusterizados. Con datos de panel convendría clusterizarlos al menos por hogar (o por village), lo que en general los agranda y no cambiaría esta conclusión.
+
+\newpage
+\appendix
+\section*{Apéndice: código}
+\lstinputlisting{../programs/ps5.do}
+
+\end{document}

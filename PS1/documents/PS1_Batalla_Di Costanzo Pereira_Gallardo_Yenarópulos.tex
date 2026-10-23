@@ -1,0 +1,216 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,provide=*]{babel}
+\addto\captionsspanish{\renewcommand{\tablename}{Tabla}}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{adjustbox}
+\usepackage{pdflscape}
+\usepackage{float}
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage[round]{natbib}
+\usepackage[hidelinks]{hyperref}
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+\setlist{itemsep=0.2em}
+
+% Texto en rojo = algo que hay que revisar/actualizar después de volver a correr el do-file.
+% Para sacar el color: \renewcommand{\revisar}[1]{#1}
+\newcommand{\revisar}[1]{\textcolor{red}{#1}}
+% Inserta una tabla exportada desde Stata (se achica si no entra)
+\newcommand{\tabla}[1]{\begin{adjustbox}{max width=\linewidth, max totalheight=0.72\textheight}\input{#1}\end{adjustbox}}
+% Figura que todavía no existe (se genera al correr el do-file): muestra un recuadro
+\newcommand{\figura}[2][0.75\linewidth]{\IfFileExists{#2}{\includegraphics[width=#1]{#2}}{\fbox{\parbox{\dimexpr#1-2\fboxsep-2\fboxrule\relax}{\centering\vspace{2em}\textcolor{red}{Figura pendiente: se genera al correr el do-file}\\[0.5em]\texttt{\detokenize{#2}}\vspace{2em}}}}}
+% Notas al pie de tablas
+\newcommand{\notas}[1]{\par\vspace{0.3em}\begin{minipage}{0.92\linewidth}\footnotesize\textit{Notas:} #1\end{minipage}}
+% Consignas en cursiva
+\newcommand{\consigna}[1]{\par\textit{#1}\par}
+
+\lstset{
+  language={},
+  basicstyle=\ttfamily\scriptsize,
+  breaklines=true,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  frame=single,
+  rulecolor=\color{gray!50},
+  commentstyle=\color{gray},
+  morecomment=[l]{*\ },
+  morecomment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  tabsize=4,
+  inputencoding=utf8,
+  extendedchars=true,
+  literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+           {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+           {ñ}{{\~n}}1 {Ñ}{{\~N}}1 {ü}{{\"u}}1 {Ü}{{\"U}}1
+           {¿}{{?`}}1 {¡}{{!`}}1 {’}{{'}}1 {‘}{{`}}1 {“}{{``}}1 {”}{{''}}1
+           {ã}{{\~a}}1 {õ}{{\~o}}1 {â}{{\^a}}1 {ê}{{\^e}}1 {ô}{{\^o}}1 {à}{{\`a}}1
+           {Ã}{{\~A}}1 {Õ}{{\~O}}1 {Â}{{\^A}}1 {Ê}{{\^E}}1 {Ô}{{\^O}}1 {Ç}{{\c C}}1 {×}{{$\times$}}1
+           {°}{{$^\circ$}}1 {–}{{--}}1 {—}{{---}}1 {·}{{$\cdot$}}1 {ç}{{\c c}}1
+}
+\begin{document}
+
+\begin{center}
+{\Large\bfseries Problem Set 1: Repaso y primeros pasos en Stata}\\[0.5em]
+E178: Economía Aplicada --- Universidad de San Andrés\\
+Fecha de entrega: 23 de agosto de 2024\\[0.5em]
+\textbf{Integrantes:} Juan Batalla, Nina Di Costanzo Pereira, Catalina Gallardo e Ignacio Yenarópulos
+\end{center}
+
+\section*{Repaso teórico}
+
+\subsection*{1. Bajo ciertos supuestos sobre el método, el modelo de MCO es el mejor estimador lineal e insesgado.}
+
+Verdadero. Es el teorema de Gauss--Markov. Si el modelo es lineal en los parámetros ($Y = X\beta + u$), se cumple exogeneidad estricta ($E(u\mid X)=0$), no hay multicolinealidad perfecta ($\rho(X)=K$) y los errores son homocedásticos y no están correlacionados entre sí ($V(u\mid X)=\sigma^2 I_n$), entonces el estimador de MCO es el de menor varianza dentro de la clase de estimadores lineales (en $Y$) e insesgados, es decir, es MELI. Para este resultado no hace falta suponer normalidad de los errores.
+
+\subsection*{2. ¿Qué supuesto es necesario para que MCO sea insesgado? ¿Es el mismo que garantiza la existencia del estimador?}
+
+Para que $\hat\beta_{MCO}$ sea insesgado el supuesto clave es la exogeneidad estricta, $E(u\mid X)=0$ (junto con linealidad y rango completo). En ese caso $E(\hat\beta\mid X)=\beta + (X'X)^{-1}X'E(u\mid X)=\beta$. No es el mismo supuesto que garantiza la existencia: para que el estimador exista (sea computable) se necesita que $X'X$ sea invertible, es decir, que no haya multicolinealidad perfecta ($\rho(X)=K$), de modo que ninguna variable explicativa sea combinación lineal exacta de las demás.
+
+\subsection*{3. ¿Cuáles son los problemas de levantar supuestos como homocedasticidad o no correlación serial?}
+
+Si se levantan estos supuestos (manteniendo la exogeneidad), el estimador de MCO sigue siendo insesgado y consistente, pero:
+\begin{itemize}
+  \item deja de ser MELI: existe otro estimador lineal e insesgado con menor varianza (Mínimos Cuadrados Generalizados), por lo que MCO pierde eficiencia;
+  \item la fórmula habitual de la varianza, $\widehat{V}(\hat\beta)=\hat\sigma^2(X'X)^{-1}$, deja de ser válida, ya que ahora $V(\hat\beta\mid X)=(X'X)^{-1}X'\Omega X(X'X)^{-1}$ con $\Omega=V(u\mid X)\neq\sigma^2 I_n$. Los errores estándar habituales quedan sesgados y los tests $t$ y $F$ y los intervalos de confianza dejan de ser confiables.
+\end{itemize}
+La heterocedasticidad puede detectarse con los tests de White o Breusch--Pagan y la correlación serial con Durbin--Watson o Breusch--Godfrey. La solución habitual es usar errores estándar robustos a heterocedasticidad (White), clusterizados o HAC (Newey--West), o bien estimar por MCG factibles.
+
+\subsection*{4. ¿Por qué decimos que $\hat\beta$ tiene distribución normal cuando suponemos $u_i\sim N(0,\sigma^2)$?}
+
+Porque $\hat\beta$ es una función lineal del término de error: $\hat\beta=(X'X)^{-1}X'Y=\beta+(X'X)^{-1}X'u$. Condicional en $X$, $\hat\beta$ es una constante más una combinación lineal de variables aleatorias normales, y toda combinación lineal de normales es normal. Por lo tanto, $\hat\beta\mid X\sim N\big(\beta,\ \sigma^2(X'X)^{-1}\big)$.
+
+\subsection*{5. Para hacer inferencia siempre se necesita suponer la distribución del término de error.}
+
+Falso. El supuesto de normalidad sirve para hacer inferencia exacta en muestras finitas. Pero con muestras grandes, por el Teorema Central del Límite, $\sqrt{n}(\hat\beta-\beta)$ converge en distribución a una normal sin necesidad de suponer cómo se distribuye $u$; alcanza con supuestos sobre sus momentos (por ejemplo, $E(u\mid X)=0$ y varianza finita). También existen métodos que no requieren suponer una distribución, como el bootstrap o la inferencia por aleatorización.
+
+\subsection*{6. Un estimador no puede ser consistente y asintóticamente normal al mismo tiempo.}
+
+Falso. Un estimador es consistente si converge en probabilidad al verdadero valor del parámetro ($\text{plim}\,\hat\theta_n=\theta$) y es asintóticamente normal si, reescalado adecuadamente, su distribución converge a una normal: $\sqrt{n}(\hat\theta_n-\theta)\xrightarrow{d}N(0,V)$. Ambas propiedades son compatibles (de hecho, la normalidad asintótica de $\sqrt{n}(\hat\theta_n-\theta)$ implica consistencia). Ejemplos: MCO bajo los supuestos habituales y el estimador de máxima verosimilitud.
+
+\subsection*{7. Consistencia e insesgadez son dos propiedades muy similares.}
+
+Falso, son propiedades distintas. La insesgadez es una propiedad de muestra finita: $E(\hat\theta)=\theta$ para un $n$ dado, es decir, el estimador acierta en promedio. La consistencia es una propiedad asintótica: a medida que $n\to\infty$ el estimador se concentra en el verdadero valor ($\text{plim}\,\hat\theta_n=\theta$). Ninguna implica a la otra. Por ejemplo, $\hat\sigma^2=\frac{1}{n}\sum_i\hat u_i^2$ es sesgado pero consistente, mientras que usar solo la primera observación, $X_1$, para estimar la media poblacional es insesgado pero no consistente (su varianza no se reduce al aumentar $n$).
+
+\section*{Primeros pasos en Stata}
+
+\subsection*{1. Limpieza de la base}
+
+La base tenía casi todas las variables cargadas como texto. Los pasos que seguimos fueron:
+\begin{itemize}
+  \item \texttt{sex} y \texttt{obese}: las transformamos en variables binarias (\texttt{sex} = 1 si es mujer; \texttt{obesity} = 1 si la persona es obesa).
+  \item \texttt{hipsiz} y \texttt{totexpr}: eliminamos el texto que acompañaba a los números (``hip circumference'', ``Total expenditures'') con \texttt{subinstr} y las convertimos a numéricas con \texttt{destring, dpcomma}, ya que usaban coma decimal. Lo mismo hicimos con \texttt{tincm\_r}.
+  \item Para el resto de las variables usamos un loop que reemplaza los números escritos en palabras (``one'', ``two'', etc.) por dígitos, ``Smokes'' por 1 y los valores ``,'' y ``.b'' por missing, y luego aplica \texttt{destring}.
+\end{itemize}
+
+\subsection*{2. Variables con más de 5\% de valores faltantes}
+
+Con el comando \texttt{mdesc} calculamos el porcentaje de valores faltantes de cada variable. Cinco variables superan el 5\% (Tabla~\ref{tab:missing}); la siguiente en la lista es \texttt{resprk}, con 4.6\%.
+
+\begin{table}[H]\centering
+\caption{Variables con más de 5\% de valores faltantes}\label{tab:missing}
+\begin{tabular}{llc}
+\toprule
+Variable & Descripción & \% missing \\
+\midrule
+\texttt{monage} & Edad (en meses) & 7.20 \\
+\texttt{obesity} & Obesidad & 7.20 \\
+\texttt{totexpr} & Gasto real del hogar & 6.64 \\
+\texttt{tincm\_r} & Ingreso real del hogar & 6.64 \\
+\texttt{htself} & Altura autorreportada & 6.56 \\
+\bottomrule
+\end{tabular}
+\notas{Porcentajes sobre 2,818 observaciones, calculados después de la limpieza del punto 1 y antes de reemplazar los valores irregulares del punto 3.}
+\end{table}
+
+\subsection*{3. Observaciones irregulares}
+
+Usamos \texttt{summarize} para revisar los mínimos y máximos de cada variable y detectar valores sin sentido. Encontramos 62 observaciones con gasto negativo, 4 con ingreso negativo y 1,498 hogares cuyo gasto supera a su ingreso. Siguiendo la consigna, reemplazamos todos estos valores por missing con \texttt{replace \ldots\ if \ldots}. Vale aclarar que este último criterio es muy exigente: después de aplicarlo, \texttt{totexpr} queda con solo 1,075 observaciones válidas (62\% de missing). Que el gasto supere al ingreso puede reflejar desahorro, transferencias o subdeclaración de ingresos, así que no necesariamente se trata de errores de carga. También aparecen algunos valores poco plausibles en las circunferencias de cintura y cadera (mínimos de 29 y 34 cm), que dejamos sin modificar.
+
+\subsection*{4. Orden de la base}
+
+Usamos \texttt{order id site sex} para que esas sean las tres primeras variables y \texttt{gsort -totexpr} para ordenar las filas de mayor a menor según el gasto real.
+
+\subsection*{5. Estadísticas descriptivas}
+
+\begin{table}[H]\centering
+\caption{Estadísticas descriptivas}\label{tab:desc}
+\tabla{"../output/Tabla 1 - Ejercicio 5.tex"}
+\notas{Cada variable se resume con todas sus observaciones no faltantes. \textit{Female} = 1 si la persona es mujer. \textit{Satisfaction with Life} va de 1 (insatisfecho) a 5 (satisfecho). Las circunferencias están en centímetros.}
+\end{table}
+
+La Tabla~\ref{tab:desc} muestra que el 58.4\% de la muestra son mujeres. La edad promedio es de 45.9 años, con un desvío de 17.8 años y un rango de 18 a 100, así que se trata de una muestra de adultos de todas las edades. La satisfacción con la vida tiene una media de 2.48 en una escala de 1 a 5: la mayoría de las respuestas se concentra en los valores bajos (el 57\% responde 1 o 2). Las circunferencias de cintura y cadera promedian 84.6 y 100.8 cm, respectivamente, con algunos valores extremos (mínimos de 29 y 34 cm) que probablemente sean errores de medición. Por último, el gasto real del hogar es la variable más dispersa: tiene una media de 5,316 y un desvío de 4,336, y su máximo (37,728) está muy por encima de la media, lo que indica una distribución con asimetría a derecha. Esta variable tiene muchas menos observaciones que las demás por los reemplazos del punto 3.
+
+\subsection*{6. ``Hips don't lie''}
+
+\textbf{a.} La Figura~\ref{fig:box} compara la distribución de la circunferencia de cadera entre hombres y mujeres. La mediana de las mujeres (alrededor de 101 cm) es mayor que la de los hombres (alrededor de 97 cm) y su caja (el rango intercuartil) también es más amplia, lo que indica mayor dispersión. En ambos grupos hay valores atípicos en las dos colas. El gráfico contradice la afirmación del paper: las caderas de las mujeres tienden a ser más grandes que las de los hombres.
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.7\linewidth]{"../output/Figura 1 - Ejercicio 6.png"}
+\caption{Circunferencia de cadera según sexo}\label{fig:box}
+\end{figure}
+
+\textbf{b.} El test de diferencia de medias (Tabla~\ref{tab:ttest}) muestra que la cadera de las mujeres mide en promedio 102.99 cm y la de los hombres 97.68 cm, una diferencia de 5.31 cm. El estadístico $t$ es 11.86 y el p-valor del test a dos colas es prácticamente cero, así que rechazamos la hipótesis nula de igualdad de medias a cualquier nivel de significatividad usual. La diferencia va en la dirección opuesta a la que plantea el paper: en esta muestra, las mujeres tienen caderas significativamente más grandes que los hombres.
+
+\begin{table}[H]\centering
+\caption{Test de diferencia de medias de la circunferencia de cadera por sexo}\label{tab:ttest}
+\tabla{"../output/Tabla 2 - Ejercicio 6.tex"}
+\notas{Diferencia = mujeres $-$ hombres. Test $t$ con varianzas iguales (\texttt{ttest hipsiz, by(sex)}); $N$ = 1,637 mujeres y 1,160 hombres. * $p<0.10$, ** $p<0.05$, *** $p<0.01$.}
+\end{table}
+
+\subsection*{7. Determinantes de la satisfacción con la vida}
+
+Las variables explicativas que consideramos son: edad (\texttt{age}) y edad al cuadrado (\texttt{age2}, creada por nosotros), sexo (\texttt{sex}, = 1 si es mujer), altura medida (\texttt{height}) y autorreportada (\texttt{htself}), logaritmo del ingreso real del hogar (\texttt{ln\_income}), situación laboral (\texttt{work0}: trabaja; \texttt{work2}: no trabaja; categoría omitida: \texttt{work1}, dejando el trabajo), estado civil (\texttt{marsta1}: casado/a; \texttt{marsta2}: convive; \texttt{marsta3}: divorciado/a; \texttt{marsta4}: viudo/a; categoría omitida: soltero/a), escalón económico (\texttt{econrk}, escala de 1 a 9), satisfacción con la situación económica (\texttt{satecc}), su interacción \texttt{econ} = \texttt{econrk} $\times$ \texttt{satecc}, problemas de salud en los últimos 30 días (\texttt{hprblm}), autoevaluación de la salud (\texttt{evalhl}) y seguro médico (\texttt{cmedin}).
+
+\textbf{a.} La Figura~\ref{fig:hist1} compara la distribución de la satisfacción con la vida entre las personas casadas o que conviven y las divorciadas o viudas. Las divorciadas o viudas se concentran más en el nivel más bajo de satisfacción (29.9\% frente a 20.5\%), mientras que las que están en pareja tienen más peso en los niveles 3 a 5 (42.6\% frente a 33.3\%). Esto sugiere una asociación positiva entre estar en pareja y la satisfacción con la vida respecto de haber perdido la pareja. En ambos grupos, de todas formas, la mayor parte de las respuestas está en los niveles 1 y 2.
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.7\linewidth]{"../output/Figura 2 - Ejercicio 7.png"}
+\caption{Satisfacción con la vida según estado civil.}\label{fig:hist1}
+\end{figure}
+
+La Figura~\ref{fig:hist2} compara a quienes tienen seguro médico con quienes no lo tienen. Las personas sin seguro se concentran más en los niveles bajos (63.9\% responde 1 o 2, frente a 56.1\% de las que tienen seguro) y tienen menos peso en los niveles altos (12.6\% responde 4 o 5, frente a 21.9\%). Esperamos entonces un coeficiente positivo del seguro médico. Hay que tener en cuenta que estas comparaciones no controlan por otras variables (por ejemplo, el ingreso o la edad) que pueden estar correlacionadas tanto con tener seguro como con la satisfacción.
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.7\linewidth]{"../output/Figura 3 - Ejercicio 7.png"}
+\caption{Satisfacción con la vida según tenencia de seguro médico.}\label{fig:hist2}
+\end{figure}
+
+\textbf{b.} Estimamos por MCO las siguientes dos especificaciones:
+\begin{align*}
+\text{Modelo 1:}\quad \text{satlif}_i =\ &\alpha+\beta_1\,\text{age}_i+\beta_2\,\text{age}^2_i+\beta_3\,\text{sex}_i+\beta_4\,\text{height}_i+\beta_5\ln(\text{income}_i)\\
+&+\beta_6\,\text{work0}_i+\beta_7\,\text{work2}_i+\textstyle\sum_{j=1}^{4}\gamma_j\,\text{marsta}j_i+\beta_8\,\text{econrk}_i+\beta_9\,\text{hprblm}_i+u_i\\[0.6em]
+\text{Modelo 2:}\quad \text{satlif}_i =\ &\alpha+\beta_1\,\text{age}_i+\beta_2\,\text{age}^2_i+\beta_3\,\text{sex}_i+\beta_4\,\text{htself}_i+\beta_5\ln(\text{income}_i)+\beta_6\,\text{work0}_i\\
+&+\beta_7\,\text{work2}_i+\beta_8\,\text{econrk}_i+\beta_9\,\text{satecc}_i+\beta_{10}\,(\text{econrk}_i\times\text{satecc}_i)\\
+&+\beta_{11}\,\text{evalhl}_i+\beta_{12}\,\text{cmedin}_i+u_i
+\end{align*}
+El segundo modelo se concentra en variables de percepción (satisfacción con la situación económica y autoevaluación de la salud). Como incluye la interacción entre \texttt{econrk} y \texttt{satecc}, también incluye ambos efectos principales.
+
+\begin{table}[H]\centering
+\caption{Determinantes de la satisfacción con la vida (MCO)}\label{tab:reg}
+\tabla{"../output/Tabla 3 y 4 - Ejercicio 7.tex"}
+\notas{Variable dependiente: satisfacción con la vida (1 a 5). Errores estándar entre paréntesis. Categorías omitidas: \textit{leaving work} (situación laboral) y soltero/a (estado civil). * $p<0.10$, ** $p<0.05$, *** $p<0.01$.}
+\end{table}
+
+\textit{Modelo 1.} La edad tiene un efecto no lineal: el coeficiente de \texttt{age} es negativo ($-0.036$) y el de \texttt{age2} positivo ($0.0004$), ambos significativos al 1\%. Esto implica una relación en forma de U, en la que la satisfacción cae con la edad hasta un mínimo en torno a los 43 años y luego vuelve a subir. El logaritmo del ingreso es significativo al 1\%: un aumento de 10\% en el ingreso del hogar se asocia con un aumento de $0.180\times\ln(1.1)\approx0.017$ puntos en la satisfacción, y duplicar el ingreso, con un aumento de $0.180\times\ln 2\approx0.12$ puntos. Respecto de quienes están dejando su trabajo, los que trabajan reportan 0.26 puntos menos de satisfacción (significativo al 10\%) y los que no trabajan, 0.42 puntos menos (significativo al 1\%); como la categoría omitida tiene muy pocas observaciones (54), estos coeficientes deben leerse con cuidado. Todas las categorías de estado civil tienen coeficientes negativos, de entre $-0.18$ y $-0.22$, respecto de los solteros: casados, divorciados y viudos son significativos al 5\% y los que conviven, al 10\%. Subir un escalón en la escala económica (de 1 a 9) se asocia con 0.23 puntos más de satisfacción (significativo al 1\%), y haber tenido problemas de salud en el último mes, con 0.14 puntos menos (significativo al 1\%). El sexo y la altura no son significativos. El modelo explica el 17.6\% de la variabilidad de la satisfacción.
+
+\textit{Modelo 2.} La forma de U en la edad se mantiene (ambos coeficientes son significativos al 1\%), con un mínimo en torno a los 47 años. El ingreso sigue siendo significativo al 1\%, aunque con un coeficiente menor (0.107), en parte porque las variables de percepción económica captan parte de su efecto. La satisfacción con la situación económica es la variable con mayor efecto: como está interactuada con el escalón económico, su efecto marginal es $\partial\,\text{satlif}/\partial\,\text{satecc}=0.566-0.028\,\text{econrk}$, que en el escalón promedio (3.55) es de alrededor de 0.47 puntos. La interacción negativa (significativa al 5\%) indica que la satisfacción con la situación económica pesa menos en la satisfacción con la vida cuanto más alto es el escalón económico de la persona. Una mejor autoevaluación de la salud se asocia con 0.18 puntos más de satisfacción (1\%) y tener seguro médico, con 0.15 puntos más (5\%). Trabajar y no trabajar siguen teniendo coeficientes negativos y significativos (al 5\% y al 1\%). El sexo y la altura autorreportada no son significativos. El $R^2$ sube a 0.333.
+
+En ambos casos los coeficientes deben interpretarse como correlaciones condicionales y no como efectos causales: las variables de percepción (\texttt{satecc}, \texttt{evalhl}) probablemente se determinan junto con la satisfacción con la vida, y puede haber variables omitidas.
+
+\newpage
+\appendix
+\section*{Apéndice: código}
+\lstinputlisting{../programs/ps1.do}
+
+\end{document}

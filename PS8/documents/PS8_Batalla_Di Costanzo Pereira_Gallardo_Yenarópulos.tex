@@ -1,0 +1,141 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,provide=*]{babel}
+\addto\captionsspanish{\renewcommand{\tablename}{Tabla}}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{adjustbox}
+\usepackage{pdflscape}
+\usepackage{float}
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage[round]{natbib}
+\usepackage[hidelinks]{hyperref}
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+\setlist{itemsep=0.2em}
+
+% Texto en rojo = algo que hay que revisar/actualizar después de volver a correr el do-file.
+% Para sacar el color: \renewcommand{\revisar}[1]{#1}
+\newcommand{\revisar}[1]{\textcolor{red}{#1}}
+% Inserta una tabla exportada desde Stata (se achica si no entra)
+\newcommand{\tabla}[1]{\begin{adjustbox}{max width=\linewidth, max totalheight=0.72\textheight}\input{#1}\end{adjustbox}}
+% Figura que todavía no existe (se genera al correr el do-file): muestra un recuadro
+\newcommand{\figura}[2][0.75\linewidth]{\IfFileExists{#2}{\includegraphics[width=#1]{#2}}{\fbox{\parbox{\dimexpr#1-2\fboxsep-2\fboxrule\relax}{\centering\vspace{2em}\textcolor{red}{Figura pendiente: se genera al correr el do-file}\\[0.5em]\texttt{\detokenize{#2}}\vspace{2em}}}}}
+% Notas al pie de tablas
+\newcommand{\notas}[1]{\par\vspace{0.3em}\begin{minipage}{0.92\linewidth}\footnotesize\textit{Notas:} #1\end{minipage}}
+% Consignas en cursiva
+\newcommand{\consigna}[1]{\par\textit{#1}\par}
+
+\lstset{
+  language={},
+  basicstyle=\ttfamily\scriptsize,
+  breaklines=true,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  frame=single,
+  rulecolor=\color{gray!50},
+  commentstyle=\color{gray},
+  morecomment=[l]{*\ },
+  morecomment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  tabsize=4,
+  inputencoding=utf8,
+  extendedchars=true,
+  literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+           {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+           {ñ}{{\~n}}1 {Ñ}{{\~N}}1 {ü}{{\"u}}1 {Ü}{{\"U}}1
+           {¿}{{?`}}1 {¡}{{!`}}1 {’}{{'}}1 {‘}{{`}}1 {“}{{``}}1 {”}{{''}}1
+           {ã}{{\~a}}1 {õ}{{\~o}}1 {â}{{\^a}}1 {ê}{{\^e}}1 {ô}{{\^o}}1 {à}{{\`a}}1
+           {Ã}{{\~A}}1 {Õ}{{\~O}}1 {Â}{{\^A}}1 {Ê}{{\^E}}1 {Ô}{{\^O}}1 {Ç}{{\c C}}1 {×}{{$\times$}}1
+           {°}{{$^\circ$}}1 {–}{{--}}1 {—}{{---}}1 {·}{{$\cdot$}}1 {ç}{{\c c}}1
+}
+\begin{document}
+
+\begin{center}
+{\Large\bfseries Problem Set 8: Control sintético}\\[0.5em]
+E178: Economía Aplicada --- Universidad de San Andrés\\
+Fecha de entrega: 8 de noviembre de 2024\\[0.5em]
+\textbf{Integrantes:} Juan Batalla, Nina Di Costanzo Pereira, Catalina Gallardo e Ignacio Yenarópulos
+\end{center}
+
+Este problem set se basa en \citet{freire}, que evalúa con el método de control sintético el efecto de las políticas de prevención de homicidios implementadas en São Paulo a partir de 1999. Replicamos en Stata (con el comando \texttt{synth}) los gráficos 1 a 7 del paper. El control sintético se construye con los otros 26 estados (incluido el Distrito Federal), usando como predictores los promedios de 1990--1998 del PIB per cápita, el crecimiento del PIB, el logaritmo de la población, los años de escolaridad, la tasa de homicidios, la proporción de la población en extrema pobreza y el índice de Gini, igual que en el código de R del autor. Los pesos de los predictores ($V$) se eligen para minimizar el error de predicción de la tasa de homicidios entre 1990 y 1998 (opción \texttt{nested}).
+
+
+\section*{Figura 1: São Paulo y el resto de Brasil}
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.7\linewidth]{"../output/Figura 1.png"}
+\caption{Tasa de homicidios cada 100.000 habitantes: São Paulo y Brasil (promedio de los demás estados).}\label{fig:1}
+\end{figure}
+
+Antes de 1999 la tasa de homicidios de São Paulo era sistemáticamente más alta que el promedio del resto del país (alrededor de 30 contra 20 homicidios cada 100.000 habitantes a principios de los noventa) y crecía, hasta alcanzar un pico de 44 en 1999. Después del cambio de política la tendencia se revierte: la tasa cae de forma sostenida, en especial desde 2003, y llega a 15 en 2007--2009. Mientras tanto, el promedio del resto del país sigue subiendo (de 23 en 1999 a 31 en 2009). São Paulo pasa a tener una tasa menor que la del resto del país a partir de 2005. El efecto no es inmediato: la caída empieza un par de años después de 1999.
+
+\section*{Figuras 2 y 3: São Paulo y São Paulo sintético}
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.7\linewidth]{"../output/Figura 2.png"}
+\caption{Tasa de homicidios: São Paulo y São Paulo sintético.}\label{fig:2}
+\end{figure}
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.7\linewidth]{"../output/Figura 3.png"}
+\caption{Diferencia en la tasa de homicidios entre São Paulo y São Paulo sintético.}\label{fig:3}
+\end{figure}
+
+El São Paulo sintético es un promedio ponderado de los estados del donor pool, con pesos elegidos para que reproduzca las características y la tasa de homicidios de São Paulo antes de 1999. En nuestra estimación los estados con peso positivo son Mato Grosso do Sul (0.453), el Distrito Federal (0.319), Roraima (0.201) y Santa Catarina (0.027). Son pesos distintos de los del paper (Santa Catarina 0.274, Distrito Federal 0.210, Espírito Santo 0.209, Río de Janeiro 0.169 y Roraima 0.137), lo que es esperable porque el algoritmo de optimización de Stata no es el mismo que el de R. Lo importante es que el ajuste antes del tratamiento es bueno: entre 1990 y 1998 las diferencias entre São Paulo y su sintético son de entre $-2$ y $2.6$ homicidios cada 100.000 habitantes (Figura~\ref{fig:3}), así que el sintético es un contrafáctico creíble de lo que habría pasado sin la política.
+
+Después de 1999 las trayectorias se separan, pero no de inmediato. Entre 1999 y 2001 la tasa de São Paulo sigue subiendo y queda por encima de la del sintético (la diferencia llega a $+10$ en 2001). Desde 2002 cae mucho más rápido: en 2004 ya está por debajo del sintético, y en 2009 la diferencia es de $-16.8$ homicidios cada 100.000 habitantes (15.3 frente a 32.1). La magnitud es algo menor que la del paper ($-20$), pero el patrón es el mismo: la caída de los homicidios en São Paulo es mucho mayor que la que predice el contrafáctico, lo que es consistente con un efecto de las políticas implementadas, aunque con varios años de rezago.
+
+\section*{Figura 4: placebo en el tiempo}
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.7\linewidth]{"../output/Figura 4.png"}
+\caption{Placebo en el tiempo: política ficticia en 1995.}\label{fig:4}
+\end{figure}
+
+En la Figura~\ref{fig:4} repetimos el ejercicio como si la política se hubiera implementado en 1995, usando solo información de 1990--1994 y mirando el período hasta 1998 (antes de la política verdadera). Si el método detectara ``efectos'' en una fecha en la que no hubo intervención, la estimación principal sería poco creíble. Entre 1995 y 1997 São Paulo y su sintético se mueven prácticamente juntos, y en 1998 la tasa de São Paulo queda por encima del sintético. Es decir, el placebo no genera una caída espuria de los homicidios. Hay que notar, de todas formas, que el ajuste antes de 1995 es peor que en la estimación principal (el sintético queda por debajo de São Paulo entre 1991 y 1993), porque se usan menos años para construirlo.
+
+\section*{Figura 5: leave-one-out}
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.7\linewidth]{"../output/Figura 5.png"}
+\caption{Distribución leave-one-out del control sintético de São Paulo.}\label{fig:5}
+\end{figure}
+
+En la Figura~\ref{fig:5} volvemos a estimar el sintético excluyendo, uno por vez, a los estados que excluye el código de R (Roraima, Río de Janeiro, Santa Catarina y el Distrito Federal). Si el resultado dependiera de un único estado del donor pool, al excluirlo el contrafáctico cambiaría mucho. Todas las versiones leave-one-out se mantienen claramente por encima de São Paulo desde 2005, así que la conclusión no depende de ningún estado en particular. Lo que sí cambia es la magnitud: al excluir al Distrito Federal o a Roraima (que tienen pesos altos) el sintético cae hacia el final del período y la diferencia en 2009 se reduce a alrededor de $-8$ y $-10$, mientras que al excluir Río de Janeiro o Santa Catarina la diferencia es de alrededor de $-20$.
+
+\section*{Figuras 6 y 7: test de permutación}
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.7\linewidth]{"../output/Figura 6.png"}
+\caption{Test de permutación: diferencias en la tasa de homicidios de São Paulo y de los otros 26 estados.}\label{fig:6}
+\end{figure}
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.7\linewidth]{"../output/Figura 7.png"}
+\caption{Test de permutación: São Paulo y los estados con MSPE pre-tratamiento menor a dos veces el de São Paulo.}\label{fig:7}
+\end{figure}
+
+El test de permutación asigna el tratamiento, de a uno, a cada estado del donor pool, estima su control sintético y compara las diferencias resultantes con la de São Paulo. Si la diferencia de São Paulo es grande en relación con la distribución de diferencias placebo, es poco probable que surja por azar. La Figura~\ref{fig:6} muestra que varios estados tienen diferencias grandes, tanto positivas como negativas, pero en general se trata de estados cuyo sintético ajusta mal antes de 1999: si el ajuste pre-tratamiento es malo, la diferencia posterior no es informativa. Por eso, en la Figura~\ref{fig:7} nos quedamos solo con los estados cuyo error cuadrático medio de predicción (MSPE) antes de 1999 es menor a dos veces el de São Paulo. Son los mismos doce estados que selecciona el código de R. Entre ellos, São Paulo tiene la caída más pronunciada: en 2009 su diferencia es de $-16.8$, mientras que la más negativa entre los placebos es de alrededor de $-11$ (Santa Catarina). Si en cambio se ordena a todos los estados según el cociente entre el MSPE posterior y el anterior a 1999, São Paulo queda quinto entre 27, lo que equivale a un p-valor de permutación de $5/27\approx0.19$. Ese ranking, sin embargo, no distingue la dirección de los cambios: los estados que quedan por encima tienen sobre todo aumentos de los homicidios respecto de su sintético. En conjunto, la reducción de homicidios de São Paulo se destaca frente a los placebos con buen ajuste, aunque la evidencia es menos concluyente que en el paper.
+
+En síntesis, la evidencia es consistente con la conclusión del paper: las políticas implementadas en São Paulo desde 1999 están asociadas con una reducción importante de los homicidios respecto del contrafáctico sintético. Las principales cautelas son que el efecto aparece con varios años de rezago y que, como hubo varias políticas simultáneas, el método no permite saber cuál de ellas explica la caída.
+
+\begin{thebibliography}{9}
+\bibitem[Freire(2018)]{freire} Freire, D. (2018). Evaluating the effect of homicide prevention strategies in São Paulo, Brazil: A synthetic control approach. \textit{Latin American Research Review}, 53(2), 231--249.
+\end{thebibliography}
+
+\newpage
+\appendix
+\section*{Apéndice: código}
+\lstinputlisting{../programs/ps8.do}
+
+\end{document}

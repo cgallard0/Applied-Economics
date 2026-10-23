@@ -1,0 +1,18 @@
+{
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\begin{tabular}{l*{9}{c}}
+\toprule
+                    &\multicolumn{1}{c}{(1)}&\multicolumn{1}{c}{(2)}&\multicolumn{1}{c}{(3)}&\multicolumn{1}{c}{(4)}&\multicolumn{1}{c}{(5)}&\multicolumn{1}{c}{(6)}&\multicolumn{1}{c}{(7)}&\multicolumn{1}{c}{(8)}&\multicolumn{1}{c}{(9)}\\
+                    &\multicolumn{1}{c}{Illiteracy}&\multicolumn{1}{c}{Without primary}&\multicolumn{1}{c}{Without toilet}&\multicolumn{1}{c}{Without electricity}&\multicolumn{1}{c}{Without water}&\multicolumn{1}{c}{Overcrowding}&\multicolumn{1}{c}{Earthen floor}&\multicolumn{1}{c}{Small localities}&\multicolumn{1}{c}{Low salary}\\
+\midrule
+Cartel presence     &     -21.771\sym{**} &     -34.344\sym{***}&      -6.100         &      -4.595\sym{*}  &       3.271         &     -19.994\sym{**} &      -7.041         &    -100.693\sym{**} &     -27.202\sym{**} \\
+                    &     (8.941)         &    (12.729)         &     (4.193)         &     (2.657)         &     (7.258)         &     (9.295)         &     (7.003)         &    (39.096)         &    (10.825)         \\
+\midrule
+Wild bootstrap p-valor&       0.020         &       0.010         &       0.130         &       0.043         &       0.795         &       0.051         &       0.349         &       0.008         &       0.023         \\
+Efectos fijos por estado&         Yes         &         Yes         &         Yes         &         Yes         &         Yes         &         Yes         &         Yes         &         Yes         &         Yes         \\
+Controles           &         Yes         &         Yes         &         Yes         &         Yes         &         Yes         &         Yes         &         Yes         &         Yes         &         Yes         \\
+Clusters            &          30         &          30         &          30         &          30         &          30         &          30         &          30         &          30         &          30         \\
+Observaciones       &       2,161         &       2,161         &       2,161         &       2,161         &       2,161         &       2,161         &       2,161         &       2,161         &       2,161         \\
+\bottomrule
+\end{tabular}
+}

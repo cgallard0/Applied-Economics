@@ -1,0 +1,18 @@
+{
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\begin{tabular}{l*{8}{c}}
+\toprule
+                    &\multicolumn{1}{c}{(1)}         &\multicolumn{1}{c}{(2)}         &\multicolumn{1}{c}{(3)}         &\multicolumn{1}{c}{(4)}         &\multicolumn{1}{c}{(5)}         &\multicolumn{1}{c}{(6)}         &\multicolumn{1}{c}{(7)}         &\multicolumn{1}{c}{(8)}         \\
+\midrule
+Female participation&       0.154\sym{***}&      -0.039\sym{*}  &      -0.032         &       0.154\sym{***}&       0.013         &      -0.082\sym{***}&      -0.082\sym{***}&       0.038         \\
+                    &     (0.038)         &     (0.023)         &     (0.024)         &     (0.038)         &     (0.038)         &     (0.024)         &     (0.024)         &     (0.039)         \\
+\midrule
+Household FE        &         Yes         &          No         &          No         &         Yes         &         Yes         &          No         &          No         &         Yes         \\
+Year FE             &          No         &         Yes         &          No         &          No         &         Yes         &         Yes         &          No         &          No         \\
+Village FE          &          No         &          No         &         Yes         &         Yes         &          No         &         Yes         &          No         &          No         \\
+Village x year FE   &          No         &          No         &          No         &          No         &          No         &          No         &         Yes         &         Yes         \\
+Observaciones       &       1,652         &       1,652         &       1,652         &       1,652         &       1,652         &       1,652         &       1,652         &       1,652         \\
+R-cuadrado          &       0.652         &       0.050         &       0.167         &       0.652         &       0.693         &       0.220         &       0.294         &       0.768         \\
+\bottomrule
+\end{tabular}
+}

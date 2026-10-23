@@ -1,0 +1,109 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,provide=*]{babel}
+\addto\captionsspanish{\renewcommand{\tablename}{Tabla}}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{adjustbox}
+\usepackage{pdflscape}
+\usepackage{float}
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage[round]{natbib}
+\usepackage[hidelinks]{hyperref}
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+\setlist{itemsep=0.2em}
+
+% Texto en rojo = algo que hay que revisar/actualizar después de volver a correr el do-file.
+% Para sacar el color: \renewcommand{\revisar}[1]{#1}
+\newcommand{\revisar}[1]{\textcolor{red}{#1}}
+% Inserta una tabla exportada desde Stata (se achica si no entra)
+\newcommand{\tabla}[1]{\begin{adjustbox}{max width=\linewidth, max totalheight=0.72\textheight}\input{#1}\end{adjustbox}}
+% Figura que todavía no existe (se genera al correr el do-file): muestra un recuadro
+\newcommand{\figura}[2][0.75\linewidth]{\IfFileExists{#2}{\includegraphics[width=#1]{#2}}{\fbox{\parbox{\dimexpr#1-2\fboxsep-2\fboxrule\relax}{\centering\vspace{2em}\textcolor{red}{Figura pendiente: se genera al correr el do-file}\\[0.5em]\texttt{\detokenize{#2}}\vspace{2em}}}}}
+% Notas al pie de tablas
+\newcommand{\notas}[1]{\par\vspace{0.3em}\begin{minipage}{0.92\linewidth}\footnotesize\textit{Notas:} #1\end{minipage}}
+% Consignas en cursiva
+\newcommand{\consigna}[1]{\par\textit{#1}\par}
+
+\lstset{
+  language={},
+  basicstyle=\ttfamily\scriptsize,
+  breaklines=true,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  frame=single,
+  rulecolor=\color{gray!50},
+  commentstyle=\color{gray},
+  morecomment=[l]{*\ },
+  morecomment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  tabsize=4,
+  inputencoding=utf8,
+  extendedchars=true,
+  literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+           {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+           {ñ}{{\~n}}1 {Ñ}{{\~N}}1 {ü}{{\"u}}1 {Ü}{{\"U}}1
+           {¿}{{?`}}1 {¡}{{!`}}1 {’}{{'}}1 {‘}{{`}}1 {“}{{``}}1 {”}{{''}}1
+           {ã}{{\~a}}1 {õ}{{\~o}}1 {â}{{\^a}}1 {ê}{{\^e}}1 {ô}{{\^o}}1 {à}{{\`a}}1
+           {Ã}{{\~A}}1 {Õ}{{\~O}}1 {Â}{{\^A}}1 {Ê}{{\^E}}1 {Ô}{{\^O}}1 {Ç}{{\c C}}1 {×}{{$\times$}}1
+           {°}{{$^\circ$}}1 {–}{{--}}1 {—}{{---}}1 {·}{{$\cdot$}}1 {ç}{{\c c}}1
+}
+\begin{document}
+
+\begin{center}
+{\Large\bfseries Problem Set 7: Inferencia con clusters}\\[0.5em]
+E178: Economía Aplicada --- Universidad de San Andrés\\
+Fecha de entrega: 1 de noviembre de 2024\\[0.5em]
+\textbf{Integrantes:} Juan Batalla, Nina Di Costanzo Pereira, Catalina Gallardo e Ignacio Yenarópulos
+\end{center}
+
+Este problem set se basa en \citet{angrist}, que evalúan con un experimento aleatorio un programa de incentivos monetarios para que los estudiantes de escuelas secundarias de Israel obtengan el certificado de finalización (\textit{Bagrut}). El objetivo es comparar distintas estrategias de inferencia en la regresión
+\[
+\text{Bagrut}_{ig}=\beta\,\text{Treated}_{ig}+\delta X_{ig}+u_{ig},
+\]
+donde $X$ incluye \texttt{semarab}, \texttt{semrel} y efectos fijos por grupo (cuando es posible). Las 3,821 observaciones se dividen en 11 grupos (clusters) formados a partir de los pares de escuelas del diseño experimental.
+
+\section*{¿Qué estrategia es más adecuada?}
+
+El tratamiento se asignó a nivel de escuela y es muy probable que los resultados de los alumnos de una misma escuela (y de un mismo grupo) estén correlacionados: comparten docentes, recursos, contexto socioeconómico y shocks comunes. Los \textbf{errores estándar robustos} (de White) corrigen por heterocedasticidad, pero suponen que las observaciones son independientes entre sí. Si hay correlación dentro de los clusters, en particular en el regresor de interés (que varía solo entre escuelas), los errores robustos subestiman la verdadera variabilidad del estimador y llevan a rechazar la hipótesis nula con demasiada frecuencia (problema de Moulton). Por eso esperamos que la primera estrategia dé errores estándar mucho más chicos y p-valores mucho menores que las otras tres, que sí permiten correlación arbitraria dentro de cada cluster.
+
+Los \textbf{errores estándar clusterizados} permiten correlación dentro de los clusters y suponen independencia entre clusters, pero su validez es asintótica en el \emph{número de clusters}. Con solo 11 clusters (y de tamaños muy distintos), los errores clusterizados tienden a ser sesgados hacia abajo y los tests sobrerrechazan, aun usando una distribución $t$ con $G-1$ grados de libertad. Las otras dos estrategias están pensadas para pocos clusters:
+\begin{itemize}
+  \item El \textbf{wild cluster bootstrap} (restringido, con pesos de Rademacher) genera muestras artificiales multiplicando los residuos de cada cluster, bajo la hipótesis nula, por un signo aleatorio común a todo el cluster, lo que preserva la correlación intra-cluster. Funciona bien con relativamente pocos clusters, aunque puede fallar si hay muy pocos clusters tratados o si los tamaños son muy desiguales.
+  \item El \textbf{approximate randomization test} (ART) de \citet{crs} estima el coeficiente por separado dentro de cada cluster y testea usando cambios de signo de esas estimaciones. Requiere que el coeficiente se pueda estimar dentro de cada cluster, es decir, que en cada cluster haya observaciones tratadas y de control, y que cada cluster sea suficientemente grande para que su estimación sea aproximadamente normal. Ambas condiciones se cumplen acá: como el experimento emparejó escuelas tratadas y de control, cada grupo tiene ambos tipos de escuelas, y los clusters tienen entre 139 y 613 alumnos. Una desventaja es que no permite incluir efectos fijos por grupo (porque la estimación se hace dentro de cada grupo).
+\end{itemize}
+Por estas razones consideramos que el ART y el wild cluster bootstrap son las estrategias más adecuadas en este caso, seguidas por los errores clusterizados, y que los errores robustos no son apropiados.
+
+\section*{Resultados}
+
+\begin{table}[H]\centering
+\caption{Efecto del tratamiento sobre la obtención del Bagrut con distintas estrategias de inferencia}\label{tab:inf}
+\tabla{"../output/Tabla 1.tex"}
+\notas{Variable dependiente: obtención del certificado Bagrut. Controles: \texttt{semarab} y \texttt{semrel}. Columnas 1--3: misma regresión con efectos fijos por grupo; columna 2: errores clusterizados por grupo (p-valor con $t_{G-1}$); columna 3: p-valor del wild cluster bootstrap restringido (999 repeticiones, pesos de Rademacher). Columna 4: el coeficiente es el promedio de las estimaciones dentro de cada cluster y el p-valor surge de 999 cambios de signo aleatorios.}
+\end{table}
+
+La Tabla~\ref{tab:inf} muestra que el coeficiente estimado es 0.068: el programa aumentaría en 6.8 puntos porcentuales la probabilidad de obtener el certificado. Con errores robustos, el error estándar es 0.014 y el efecto es significativo a cualquier nivel usual (p-valor menor a 0.001). Pero cuando se tiene en cuenta la correlación dentro de los clusters, el error estándar se multiplica por más de tres (0.047) y el p-valor sube a 0.173, así que el efecto deja de ser significativo. El wild cluster bootstrap da un resultado parecido (p-valor de 0.196). El ART, cuyo estimador es el promedio de los efectos estimados en cada cluster (0.049), da un p-valor de 0.520, todavía más lejos de rechazar la nula. Esto refleja que los efectos estimados en cada cluster son muy heterogéneos (van de $-0.56$ a $0.31$).
+
+La diferencia entre la primera estrategia y las demás no se debe a la cantidad de observaciones, sino a que los errores robustos tratan como independientes a alumnos cuyos resultados están correlacionados, y por eso sobreestiman la información que hay en los datos. Una vez que se permite la correlación dentro de los clusters, y en especial con los métodos diseñados para pocos clusters, no hay evidencia estadística de que el programa haya aumentado la tasa de obtención del Bagrut en esta especificación.
+
+\begin{thebibliography}{9}
+\bibitem[Angrist y Lavy(2009)]{angrist} Angrist, J., y Lavy, V. (2009). The effects of high stakes high school achievement awards: Evidence from a randomized trial. \textit{American Economic Review}, 99(4), 1384--1414.
+\bibitem[Canay, Romano y Shaikh(2017)]{crs} Canay, I. A., Romano, J. P., y Shaikh, A. M. (2017). Randomization tests under an approximate symmetry assumption. \textit{Econometrica}, 85(3), 1013--1030.
+\end{thebibliography}
+
+\newpage
+\appendix
+\section*{Apéndice: código}
+\lstinputlisting{../programs/ps7.do}
+
+\end{document}

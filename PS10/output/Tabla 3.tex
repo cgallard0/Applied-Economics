@@ -1,0 +1,17 @@
+{
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\begin{tabular}{l*{6}{c}}
+\toprule
+            &\multicolumn{1}{c}{(1)}         &\multicolumn{1}{c}{(2)}         &\multicolumn{1}{c}{(3)}         &\multicolumn{1}{c}{(4)}         &\multicolumn{1}{c}{(5)}         &\multicolumn{1}{c}{(6)}         \\
+            &\multicolumn{1}{c}{Math h=7}&\multicolumn{1}{c}{Math h=10}&\multicolumn{1}{c}{Math h=15}&\multicolumn{1}{c}{Verbal h=7}&\multicolumn{1}{c}{Verbal h=10}&\multicolumn{1}{c}{Verbal h=15}\\
+\midrule
+Class size (RD fuzzy)&      -0.092         &      -0.122         &      -0.166         &      -0.296\sym{**} &      -0.278\sym{**} &      -0.260\sym{***}\\
+            &     (0.157)         &     (0.138)         &     (0.116)         &     (0.146)         &     (0.118)         &     (0.095)         \\
+\midrule
+p-valor robusto&       0.382         &       0.688         &       0.460         &       0.103         &       0.080         &       0.035         \\
+Bandwidth   &        7.00         &       10.00         &       15.00         &        7.00         &       10.00         &       15.00         \\
+N izquierda &          35         &          53         &          98         &          35         &          53         &          98         \\
+N derecha   &         144         &         202         &         317         &         144         &         202         &         317         \\
+\bottomrule
+\end{tabular}
+}

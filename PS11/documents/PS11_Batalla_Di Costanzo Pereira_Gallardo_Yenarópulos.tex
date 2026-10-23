@@ -1,0 +1,139 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,provide=*]{babel}
+\addto\captionsspanish{\renewcommand{\tablename}{Tabla}}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{adjustbox}
+\usepackage{pdflscape}
+\usepackage{float}
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage[round]{natbib}
+\usepackage[hidelinks]{hyperref}
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+\setlist{itemsep=0.2em}
+
+% Texto en rojo = algo que hay que revisar/actualizar después de volver a correr el do-file.
+% Para sacar el color: \renewcommand{\revisar}[1]{#1}
+\newcommand{\revisar}[1]{\textcolor{red}{#1}}
+% Inserta una tabla exportada desde Stata (se achica si no entra)
+\newcommand{\tabla}[1]{\begin{adjustbox}{max width=\linewidth, max totalheight=0.72\textheight}\input{#1}\end{adjustbox}}
+% Figura que todavía no existe (se genera al correr el do-file): muestra un recuadro
+\newcommand{\figura}[2][0.75\linewidth]{\IfFileExists{#2}{\includegraphics[width=#1]{#2}}{\fbox{\parbox{\dimexpr#1-2\fboxsep-2\fboxrule\relax}{\centering\vspace{2em}\textcolor{red}{Figura pendiente: se genera al correr el do-file}\\[0.5em]\texttt{\detokenize{#2}}\vspace{2em}}}}}
+% Notas al pie de tablas
+\newcommand{\notas}[1]{\par\vspace{0.3em}\begin{minipage}{0.92\linewidth}\footnotesize\textit{Notas:} #1\end{minipage}}
+% Consignas en cursiva
+\newcommand{\consigna}[1]{\par\textit{#1}\par}
+
+\lstset{
+  language={},
+  basicstyle=\ttfamily\scriptsize,
+  breaklines=true,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  frame=single,
+  rulecolor=\color{gray!50},
+  commentstyle=\color{gray},
+  morecomment=[l]{*\ },
+  morecomment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  tabsize=4,
+  inputencoding=utf8,
+  extendedchars=true,
+  literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+           {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+           {ñ}{{\~n}}1 {Ñ}{{\~N}}1 {ü}{{\"u}}1 {Ü}{{\"U}}1
+           {¿}{{?`}}1 {¡}{{!`}}1 {’}{{'}}1 {‘}{{`}}1 {“}{{``}}1 {”}{{''}}1
+           {ã}{{\~a}}1 {õ}{{\~o}}1 {â}{{\^a}}1 {ê}{{\^e}}1 {ô}{{\^o}}1 {à}{{\`a}}1
+           {Ã}{{\~A}}1 {Õ}{{\~O}}1 {Â}{{\^A}}1 {Ê}{{\^E}}1 {Ô}{{\^O}}1 {Ç}{{\c C}}1 {×}{{$\times$}}1
+           {°}{{$^\circ$}}1 {–}{{--}}1 {—}{{---}}1 {·}{{$\cdot$}}1 {ç}{{\c c}}1
+}
+\begin{document}
+
+\begin{center}
+{\Large\bfseries Problem Set 11: Matching}\\[0.5em]
+E178: Economía Aplicada --- Universidad de San Andrés\\
+Fecha de entrega: 29 de noviembre de 2024\\[0.5em]
+\textbf{Integrantes:} Juan Batalla, Nina Di Costanzo Pereira, Catalina Gallardo e Ignacio Yenarópulos
+\end{center}
+
+Este problem set se basa en \citet{soares}, que estudian el impacto de mejorar el acceso a la justicia sobre la resolución de conflictos, a partir de la creación de centros de justicia (\textit{justice modules}) en zonas alejadas de los centros urbanos de Perú. Usamos la base \texttt{base\_censo.dta}, con información de los distritos peruanos; la variable \texttt{treated} indica si en el distrito se abrió un centro de justicia.
+
+\section*{1. Comparación de distritos tratados y no tratados}
+
+\begin{table}[H]\centering
+\caption{Tests de diferencia de medias antes y después del matching}\label{tab:balance}
+\tabla{"../output/Tabla 1.tex"}
+\notas{Diferencia = media de los no tratados $-$ media de los tratados; test $t$ con varianzas iguales. \textit{Principal vía de acceso}: variable binaria igual a 1 si la principal vía de acceso al distrito es una carretera asfaltada. \textit{Pobreza}: ranking de pobreza del distrito (1 = el más pobre). La muestra matcheada incluye a los 271 distritos tratados y sus 271 controles. * $p<0.05$, ** $p<0.01$, *** $p<0.001$.}
+\end{table}
+
+Las columnas de la muestra completa de la Tabla~\ref{tab:balance} muestran que los distritos tratados son distintos de los no tratados. Son más grandes (en promedio tienen 19,789 habitantes, frente a 12,796 en los no tratados; la diferencia de casi 7,000 habitantes es significativa al 1\%) y es más probable que su principal vía de acceso sea una carretera asfaltada (31\% frente a 23\%, también significativa al 1\%). Además, tienen un ranking de pobreza algo más alto, es decir, son algo menos pobres (961 frente a 900), aunque esta diferencia no es significativa al 5\% (p-valor de 0.08).
+
+El problema es que los centros de justicia no se asignaron al azar: se ubicaron en distritos más poblados y accesibles. Si esas características también afectan la resolución de conflictos, comparar directamente los resultados de tratados y no tratados confundiría el efecto de los centros con el de esas diferencias previas (sesgo de selección). El problema no es que haya menos distritos tratados que controles (283 frente a 1,534), sino que los dos grupos no son comparables. El matching busca, para cada distrito tratado, uno o más distritos no tratados con características observables similares, de modo que la comparación se haga entre grupos balanceados en esas características. Como hacerlo variable por variable es inviable cuando hay muchas, se puede emparejar según el \textit{propensity score}, la probabilidad de ser tratado dadas las características observables \citep{rr}.
+
+\section*{2. Propensity score}
+
+\begin{table}[H]\centering
+\caption{Modelo probit para el propensity score}\label{tab:probit}
+\scriptsize
+\tabla{"../output/Tabla 7.tex"}
+\notas{Variable dependiente: \texttt{treated}. \texttt{ind\_abs\_pobr}: índice absoluto de pobreza; \texttt{ldens\_pob}: log de la densidad poblacional; \texttt{prov\_cap}: capital de provincia; \texttt{pob\_1}--\texttt{pob\_4}: categorías de pobreza (pobre extremo, muy pobre, pobre y regular; base: aceptable); \texttt{km\_cap\_prov}: distancia a la capital de la provincia; \texttt{via3}--\texttt{via9}: tipo de vía de acceso principal; \texttt{region\_2} y \texttt{region\_3}: sierra y selva (base: costa); \texttt{laltitud}: log de la altitud; \texttt{tdesnutr}: tasa de desnutrición; \texttt{deficit\_post} y \texttt{deficit\_aulas}: déficit de postas de salud y de aulas. Errores estándar entre paréntesis. * $p<0.10$, ** $p<0.05$, *** $p<0.01$.}
+\end{table}
+
+Estimamos el propensity score con un probit de \texttt{treated} sobre las variables indicadas (Tabla~\ref{tab:probit}), después de eliminar las observaciones con datos faltantes en alguna de ellas (quedan 1,743 distritos: 272 tratados y 1,471 no tratados). La probabilidad de recibir un centro es mayor en los distritos más densamente poblados, más alejados de la capital provincial, a mayor altitud y con mayor índice de pobreza, y menor en las capitales de provincia, en la sierra y la selva y en los distritos cuya principal vía de acceso es un camino carrozable o de herradura. El propensity score es la probabilidad predicha por este modelo para cada distrito.
+
+\section*{3. Distribución del propensity score}
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.65\linewidth]{"../output/Figura 1.png"}
+\caption{Distribución del propensity score de los distritos tratados y no tratados}\label{fig:ps1}
+\end{figure}
+
+La distribución del propensity score de los tratados está desplazada hacia la derecha respecto de la de los no tratados (Figura~\ref{fig:ps1}): la moda de los no tratados está alrededor de 0.15 y la de los tratados cerca de 0.20, y los tratados tienen más masa en valores altos. Esto es lo esperable, porque el modelo asigna mayor probabilidad a los distritos con las características de los que efectivamente recibieron un centro. Hay de todas formas una superposición importante entre ambas distribuciones. Los valores son bajos en general (casi todos por debajo de 0.5), lo que refleja que solo el 16\% de los distritos fue tratado. Fuera de la superposición quedan algunos tratados con propensity score muy alto (hasta 0.75) para los que no hay controles comparables.
+
+\section*{4. Soporte común}
+
+Definimos el soporte común como el intervalo entre el propensity score mínimo de los tratados (0.019) y el máximo de los no tratados (0.498), y creamos la variable \texttt{cs1}, igual a 1 para las observaciones dentro de ese intervalo. Quedan dentro del soporte 1,712 distritos y quedan fuera 31 (30 no tratados con propensity score muy bajo y 1 tratado con propensity score muy alto). Nos quedamos solo con las observaciones dentro del soporte común, para comparar cada tratado con controles que tengan una probabilidad de tratamiento parecida.
+
+\section*{5. Matching}
+
+Con \texttt{psmatch2} emparejamos a cada distrito tratado con el distrito no tratado que tiene el propensity score más cercano (vecino más cercano), sin reemplazo: cada control puede usarse una sola vez. La variable \texttt{matches} vale 1 para los distritos que forman parte de algún par. El resultado es una muestra de 271 tratados y 271 controles. Con matching sin reemplazo el resultado depende del orden en que se procesan las observaciones.
+
+\section*{6. Distribución del propensity score en la muestra matcheada}
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.65\linewidth]{"../output/Figura 2.png"}
+\caption{Distribución del propensity score en la muestra matcheada}\label{fig:ps2}
+\end{figure}
+
+En la muestra matcheada las distribuciones del propensity score de tratados y controles son prácticamente idénticas (Figura~\ref{fig:ps2}), a diferencia de lo que observamos en la Figura~\ref{fig:ps1}. Es el resultado esperado del matching: cada tratado tiene un control con casi el mismo propensity score. Esto implica que ambos grupos tienen la misma probabilidad estimada de ser tratados, y por lo tanto deberían estar balanceados en las variables que determinan el propensity score.
+
+\section*{7. Tests de medias en la muestra matcheada}
+
+En las columnas de la muestra matcheada de la Tabla~\ref{tab:balance}, las diferencias entre tratados y controles son mucho menores en relación con su variabilidad y ninguna es significativa. La diferencia en la proporción con carretera asfaltada desaparece por completo (es exactamente cero), la del ranking de pobreza cae de 60 a 17 posiciones y la de población cambia de signo y deja de ser significativa ($t=0.93$). Es decir, el matching logró balancear los grupos en estas características, aun cuando la población y el ranking de pobreza no entran directamente en el probit (sí lo hacen variables muy relacionadas, como la densidad y el índice de pobreza). \texttt{pstest} permite verificar además el balance de todas las variables incluidas en el propensity score.
+
+\section*{8. Supuesto de identificación}
+
+Para interpretar como causal una comparación (o regresión) en la muestra matcheada se necesitan dos supuestos. El primero, y el central, es el de independencia condicional (\textit{selection on observables} o \textit{unconfoundedness}): condicional en las variables observables $X$ (o, equivalentemente, en el propensity score), la asignación del tratamiento es independiente de los resultados potenciales, $\{Y_i(0),Y_i(1)\}\perp D_i\mid X_i$. Esto significa que no hay variables no observadas que afecten tanto la apertura de un centro como la resolución de conflictos; por ejemplo, la demanda de servicios de justicia o la capacidad de gestión local, si influyeron en dónde se abrieron los centros. El segundo es el de soporte común (\textit{overlap}): $0<P(D_i=1\mid X_i)<1$, es decir, para cada tratado tiene que haber controles con características similares, lo que garantizamos restringiendo la muestra al soporte común. Que los grupos estén balanceados en las variables observables no garantiza que lo estén en las no observables, así que el supuesto de independencia condicional no se puede testear y debe justificarse con conocimiento del proceso de asignación.
+
+\begin{thebibliography}{9}
+\bibitem[Rosenbaum y Rubin(1983)]{rr} Rosenbaum, P. R., y Rubin, D. B. (1983). The central role of the propensity score in observational studies for causal effects. \textit{Biometrika}, 70(1), 41--55.
+\bibitem[Soares et al.(2010)]{soares} Soares, Y., Sviatschi, M. M., Andrade, R., y Montenegro, J. (2010). The impact of improving access to justice on conflict resolution: Evidence from Peru. OVE Working Paper 0810, Banco Interamericano de Desarrollo.
+\end{thebibliography}
+
+\newpage
+\appendix
+\section*{Apéndice: código}
+\lstinputlisting{../programs/ps11.do}
+
+\end{document}

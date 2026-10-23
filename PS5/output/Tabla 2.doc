@@ -1,0 +1,25 @@
+{\rtf1\fs24
+\trowd\trgaph75\trleft-75\intbl\trqc\clbrdrt\brdrs\cellx4176\clbrdrt\brdrs\cellx6480\clbrdrt\brdrs\cellx8784\clbrdrt\brdrs\cellx11088\clbrdrt\brdrs\cellx13392\clbrdrt\brdrs\cellx15696\clbrdrt\brdrs\cellx18000\clbrdrt\brdrs\cellx20304\clbrdrt\brdrs\cellx22608
+\ql \cell\qc (1)\cell\qc (2)\cell\qc (3)\cell\qc (4)\cell\qc (5)\cell\qc (6)\cell\qc (7)\cell\qc (8)\cell\row
+\trowd\trgaph75\trleft-75\trqc\cellx4176\cellx6480\cellx8784\cellx11088\cellx13392\cellx15696\cellx18000\cellx20304\cellx22608
+\trowd\trgaph75\trleft-75\trqc\clbrdrb\brdrs\cellx4176\clbrdrb\brdrs\cellx6480\clbrdrb\brdrs\cellx8784\clbrdrb\brdrs\cellx11088\clbrdrb\brdrs\cellx13392\clbrdrb\brdrs\cellx15696\clbrdrb\brdrs\cellx18000\clbrdrb\brdrs\cellx20304\clbrdrb\brdrs\cellx22608
+\ql VARIABLES\cell\qc Log Expenditure\cell\qc Log Expenditure\cell\qc Log Expenditure\cell\qc Log Expenditure\cell\qc Log Expenditure\cell\qc Log Expenditure\cell\qc Log Expenditure\cell\qc Log Expenditure\cell\row
+\trowd\trgaph75\trleft-75\trqc\cellx4176\cellx6480\cellx8784\cellx11088\cellx13392\cellx15696\cellx18000\cellx20304\cellx22608
+\ql \cell\qc \cell\qc \cell\qc \cell\qc \cell\qc \cell\qc \cell\qc \cell\qc \cell\row
+\ql Female participation\cell\qc 0.154***\cell\qc -0.039*\cell\qc -0.032\cell\qc 0.154***\cell\qc 0.013\cell\qc -0.082***\cell\qc -0.082***\cell\qc 0.038\cell\row
+\ql \cell\qc (0.038)\cell\qc (0.023)\cell\qc (0.024)\cell\qc (0.038)\cell\qc (0.038)\cell\qc (0.024)\cell\qc (0.024)\cell\qc (0.039)\cell\row
+\ql Constant\cell\qc 8.286***\cell\qc 8.370***\cell\qc 8.367***\cell\qc 8.286***\cell\qc 8.347***\cell\qc 8.389***\cell\qc 8.389***\cell\qc 8.336***\cell\row
+\ql \cell\qc (0.019)\cell\qc (0.015)\cell\qc (0.015)\cell\qc (0.019)\cell\qc (0.019)\cell\qc (0.015)\cell\qc (0.015)\cell\qc (0.019)\cell\row
+\ql \cell\qc \cell\qc \cell\qc \cell\qc \cell\qc \cell\qc \cell\qc \cell\qc \cell\row
+\ql Observations\cell\qc 1,652\cell\qc 1,652\cell\qc 1,652\cell\qc 1,652\cell\qc 1,652\cell\qc 1,652\cell\qc 1,652\cell\qc 1,652\cell\row
+\ql R-squared\cell\qc 0.652\cell\qc 0.050\cell\qc 0.167\cell\qc 0.652\cell\qc 0.693\cell\qc 0.220\cell\qc 0.294\cell\qc 0.768\cell\row
+\ql Village fixed effects\cell\qc No\cell\qc No\cell\qc Yes\cell\qc Yes\cell\qc No\cell\qc Yes\cell\qc No\cell\qc No\cell\row
+\ql Household fixed effects\cell\qc Yes\cell\qc No\cell\qc No\cell\qc Yes\cell\qc Yes\cell\qc No\cell\qc No\cell\qc Yes\cell\row
+\ql Year fixed effects\cell\qc No\cell\qc Yes\cell\qc No\cell\qc No\cell\qc Yes\cell\qc Yes\cell\qc No\cell\qc No\cell\row
+\trowd\trgaph75\trleft-75\trqc\trbrdrb\brdrs\clbrdrb\brdrs\cellx4176\clbrdrb\brdrs\cellx6480\clbrdrb\brdrs\cellx8784\clbrdrb\brdrs\cellx11088\clbrdrb\brdrs\cellx13392\clbrdrb\brdrs\cellx15696\clbrdrb\brdrs\cellx18000\clbrdrb\brdrs\cellx20304\clbrdrb\brdrs\cellx22608
+\ql Village x year fixed effects\cell\qc No\cell\qc No\cell\qc No\cell\qc No\cell\qc No\cell\qc No\cell\qc Yes\cell\qc Yes\cell\row
+\pard\qc
+Standard errors in parentheses\par
+*** p<0.01, ** p<0.05, * p<0.1\par
+Column (1): household FE. Column (2): year FE. Column (3): village FE. Column (4): village and household FE. Column (5): year and household FE. Column (6): year and village FE. Column (7): village x year FE. Column (8): village x year and household FE. Household x year FE cannot be estimated (one observation per cell).\par
+}
